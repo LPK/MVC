@@ -1,0 +1,172 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+using AirLineTicketing.Models;
+
+namespace AirLineTicketing.Controllers
+{
+    public class CustomerController : Controller 
+    {
+        AdventureWorksLTEntities adb = new AdventureWorksLTEntities();
+        public ActionResult Index()
+        {
+            return View();
+        }
+        public ActionResult Customers()
+        {
+            return View(adb.Customers.ToList().Take(5));
+        }
+        [HttpGet] 
+        public ActionResult Edit(int id)
+        {
+            var data = adb.Customers.FirstOrDefault(c => c.CustomerID == id );
+
+            CustomerViewModel ViewModle = new CustomerViewModel();
+            ViewModle.CustomerID = data.CustomerID;
+            ViewModle.FirstName = data.FirstName;
+            ViewModle.LastName = data.LastName;
+            ViewModle.Email = data.EmailAddress;
+
+            return View(ViewModle);
+        }
+        [HttpPost] 
+        public ActionResult SaveEdit(CustomerViewModel EditCustomer)
+        {
+            if (ModelState.IsValid)
+            {
+                using (var adventure = new AdventureWorksLTEntities())
+                {
+                    Customer customer = adventure.Customers.FirstOrDefault(c => c.CustomerID == EditCustomer.CustomerID);
+                    try
+                    {
+                        if (customer != null)
+                        {
+                            customer.CustomerID = EditCustomer.CustomerID;
+                            customer.FirstName = EditCustomer.FirstName;
+                            customer.LastName = EditCustomer.LastName;
+                            customer.EmailAddress = EditCustomer.Email;
+                            adventure.SaveChanges();
+                        }
+                        else
+                        {
+                            return HttpNotFound("Save Not Successful");
+                        }
+                    }
+                    catch (System.Data.Entity.Validation.DbEntityValidationException e)
+                    {
+                        var outputLines = new List<string>();
+                        foreach (var eve in e.EntityValidationErrors)
+                        {
+                            outputLines.Add(string.Format(
+                                "{0}: Entity of type \"{1}\" in state \"{2}\" has the following validation errors:",
+                                DateTime.Now, eve.Entry.Entity.GetType().Name, eve.Entry.State));
+                            foreach (var ve in eve.ValidationErrors)
+                            {
+                                outputLines.Add(string.Format(
+                                    "- Property: \"{0}\", Error: \"{1}\"",
+                                    ve.PropertyName, ve.ErrorMessage));
+                            }
+                        }
+                        ////Write to file
+                        //System.IO.File.AppendAllLines(@"c:\temp\errors.txt", outputLines);
+                        //throw;
+
+                        // Showing it on screen
+                        throw new Exception(string.Join(",", outputLines.ToArray()));
+
+                    }
+
+                }
+            }
+            return RedirectToAction("Customers");
+        }
+        [HttpGet] 
+        public ActionResult Create()
+        {
+            CustomerViewModel ass = new CustomerViewModel();
+            return View("Create", ass);
+        }
+        [HttpPost] 
+        public ActionResult Save(CustomerViewModel customer)
+        {
+            if (ModelState.IsValid)
+            {
+                using (var adventure = new AdventureWorksLTEntities())
+                {
+                    var entity = new Customer
+                    {
+                        CustomerID = customer.CustomerID,
+                        EmailAddress = customer.Email,
+                        FirstName = customer.FirstName,
+                        LastName = customer.LastName,
+                        NameStyle = false,
+                        MiddleName = customer.MiddleName,
+                        PasswordHash = "sdfsdfsf",
+                        PasswordSalt = "sfsfsf",
+                        rowguid = Guid.NewGuid(),
+                        ModifiedDate = DateTime.Now,
+                    };
+                    try
+                    {
+                        adventure.Customers.Add(entity);
+                        adventure.SaveChanges();
+                    }
+                    catch (System.Data.Entity.Validation.DbEntityValidationException e)
+                    {
+                        var outputLines = new List<string>();
+                        foreach (var eve in e.EntityValidationErrors)
+                        {
+                            outputLines.Add(string.Format(
+                                "{0}: Entity of type \"{1}\" in state \"{2}\" has the following validation errors:",
+                                DateTime.Now, eve.Entry.Entity.GetType().Name, eve.Entry.State));
+                            foreach (var ve in eve.ValidationErrors)
+                            {
+                                outputLines.Add(string.Format(
+                                    "- Property: \"{0}\", Error: \"{1}\"",
+                                    ve.PropertyName, ve.ErrorMessage));
+                            }
+                        }
+                        ////Write to file
+                        //System.IO.File.AppendAllLines(@"c:\temp\errors.txt", outputLines);
+                        //throw;
+
+                        // Showing it on screen
+                        throw new Exception(string.Join(",", outputLines.ToArray()));
+
+                    }
+                   
+
+                }
+            }
+            return RedirectToAction("Customers");
+        }
+        [HttpGet] 
+        public ActionResult Details(int id)
+        {
+            var data = adb.Customers.FirstOrDefault(c => c.CustomerID == id);
+            CustomerViewModel ViewModle = new CustomerViewModel();
+            ViewModle.CustomerID = data.CustomerID;
+            ViewModle.FirstName = data.FirstName;
+            ViewModle.LastName = data.LastName;
+            ViewModle.Email = data.EmailAddress;
+
+            return View(ViewModle);
+        }
+        [HttpGet] 
+        public ActionResult Delete(int id)
+        {
+           
+                var data = adb.Customers.FirstOrDefault(c => c.CustomerID == id);
+                adb.Customers.Remove(data);
+                adb.SaveChanges();
+                return RedirectToAction("Customers");
+            
+            
+        }
+
+
+        
+    }
+}
