@@ -1,0 +1,23 @@
+public class CustomerViewModel
+    {
+        [DisplayName("Customer ID")]
+        [Required(ErrorMessage="Please Enter Id.")]
+        public int CustomerID { get; set; }
+        [Range(0, 400)]
+        public int NameStyle { get; set; }
+
+        public string FirstName { get; set; }
+        [DisplayName("Last Name")]
+        public string LastName { get; set; }
+        [DisplayName("Middle Name")]
+        public string MiddleName { get; set; }
+        [RegularExpression(".+\\@.+\\..+")]
+        public string Email { get; set; }
+        
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yy}", ApplyFormatInEditMode = true)]
+        public DateTime CreationDate { get; set; }
+
+        //[LargerThanValidationAttribute(20,ErrorMessage="Validation Valies for age")]
+        public int Age { get; set; }
+    }
