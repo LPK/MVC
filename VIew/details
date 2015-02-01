@@ -1,0 +1,58 @@
+@model AirLineTicketing.Models.CustomerViewModel
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Details</h2>
+
+<fieldset>
+    <legend>CustomerViewModel</legend>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.CustomerID)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.CustomerID)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.NameStyle)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.NameStyle)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.FirstName)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.FirstName)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.LastName)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.LastName)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.MiddleName)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.MiddleName)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Email)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Email)
+    </div>
+</fieldset>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { /* id=Model.PrimaryKey */ }) |
+    @Html.ActionLink("Back to List", "Customers")
+</p>
